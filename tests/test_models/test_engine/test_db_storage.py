@@ -6,6 +6,7 @@ Contains the TestDBStorageDocs and TestDBStorage classes
 from datetime import datetime
 import inspect
 import models
+from models import storage
 from models.engine import db_storage
 from models.amenity import Amenity
 from models.base_model import BaseModel
@@ -18,6 +19,9 @@ import json
 import os
 import pep8
 import unittest
+from sqlalchemy.orm import sessionmaker
+from sqlalchemy import create_engine
+
 DBStorage = db_storage.DBStorage
 classes = {"Amenity": Amenity, "City": City, "Place": Place,
            "Review": Review, "State": State, "User": User}
@@ -70,6 +74,7 @@ test_db_storage.py'])
 
 class TestFileStorage(unittest.TestCase):
     """Test the FileStorage class"""
+
     @unittest.skipIf(models.storage_t != 'db', "not testing db storage")
     def test_all_returns_dict(self):
         """Test that all returns a dictionaty"""
@@ -86,3 +91,40 @@ class TestFileStorage(unittest.TestCase):
     @unittest.skipIf(models.storage_t != 'db', "not testing db storage")
     def test_save(self):
         """Test that save properly saves objects to file.json"""
+
+
+class TestDBStorageInstances(unittest.TestCase):
+    Session = sessionmaker()
+
+    engine = create_engine('sqlite:///:memory:')
+
+    def setUp(self):
+        # connect to the database
+        self.connection = self.engine.connect()
+
+        # begin a non-ORM transaction
+        self.trans = self.connection.begin()
+
+        # bind an individual Session to the connection, selecting
+        # "create_savepoint" join_transaction_mode
+        self.session = self.Session(
+            bind=self.connection,
+            join_transaction_mode="create_savepoint"
+        )
+
+    @unittest.skipIf(models.storage_t != 'db', "not testing db storage")
+    def test_get_method(self):
+        """Test get method"""
+        new_state = State(name="California")
+        new_state.save()
+        state_id = new_state.id
+        state = storage.get(State, state_id)
+        self.assertEqual(state, new_state)
+
+    @unittest.skipIf(models.storage_t != 'db', "not testing db storage")
+    def test_count_method(self):
+        """Test count method"""
+        new_state = State(name="California")
+        new_state.save()
+        state = storage.count(State)
+        self.assertEqual(state, 1)
