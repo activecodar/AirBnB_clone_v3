@@ -1,5 +1,0 @@
-greenlet==2.0.2
-mysqlclient==2.1.1
-pep8==1.7.1
-SQLAlchemy==2.0.11
-typing_extensions==4.5.0

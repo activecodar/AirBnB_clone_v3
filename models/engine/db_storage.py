@@ -16,18 +16,12 @@ import sqlalchemy
 from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
 
-classes = {"Amenity": Amenity,
-           "City": City,
-           "Place": Place,
-           "Review": Review,
-           "State": State,
-           "User": User}
+classes = {"Amenity": Amenity, "City": City,
+           "Place": Place, "Review": Review, "State": State, "User": User}
 
 
 class DBStorage:
-    """
-    Interacts with the MySQL database
-    """
+    """interaacts with the MySQL database"""
     __engine = None
     __session = None
 
@@ -47,9 +41,7 @@ class DBStorage:
             Base.metadata.drop_all(self.__engine)
 
     def all(self, cls=None):
-        """
-        Query on the current database session
-        """
+        """query on the current database session"""
         new_dict = {}
         for clss in classes:
             if cls is None or cls is classes[clss] or cls is clss:
@@ -57,68 +49,28 @@ class DBStorage:
                 for obj in objs:
                     key = obj.__class__.__name__ + '.' + obj.id
                     new_dict[key] = obj
-        return new_dict
+        return (new_dict)
 
     def new(self, obj):
-        """
-        Add the object to the current database session
-        """
+        """add the object to the current database session"""
         self.__session.add(obj)
 
     def save(self):
-        """
-        Commit all changes of the current database session
-        """
+        """commit all changes of the current database session"""
         self.__session.commit()
 
     def delete(self, obj=None):
-        """
-        Delete from the current database session obj if not None
-        """
+        """delete from the current database session obj if not None"""
         if obj is not None:
             self.__session.delete(obj)
 
     def reload(self):
-        """
-        Reloads data from the database
-        """
+        """reloads data from the database"""
         Base.metadata.create_all(self.__engine)
         sess_factory = sessionmaker(bind=self.__engine, expire_on_commit=False)
         Session = scoped_session(sess_factory)
         self.__session = Session
 
     def close(self):
-        """
-        Call remove() method on the private session attribute
-        """
+        """call remove() method on the private session attribute"""
         self.__session.remove()
-
-    def get(self, cls, id):
-        """
-        Retrieves one object of the given class with the given ID.
-
-        Args:
-            cls (class): The class of the object to retrieve.
-            id (int): The ID of the object to retrieve.
-
-        Returns:
-            The object with the given ID, or `None` if no such object exists.
-        """
-        if cls not in classes.values():
-            return None
-        for obj in self.all(cls).values():
-            if obj.id == id:
-                return obj
-        return None
-
-    def count(self, cls=None):
-        """
-        Counts the number of objects in storage.
-
-        Args:
-            cls (class, optional): The class of objects to count.
-            Defaults to None.
-        Returns:
-            The number of objects in storage.
-        """
-        return len(self.all()) if cls is None else len(self.all(cls))
