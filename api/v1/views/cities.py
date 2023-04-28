@@ -3,7 +3,7 @@
 This module provides views for managing cities.
 Handles all CRUD functions
 """
-from flask import request
+from flask import request, jsonify
 
 from api.v1.views import cities_views
 from models import storage
@@ -25,8 +25,8 @@ def get_state_cities(state_id):
     if not state:
         return {"error": "Not found"}, 404
     cities = storage.all('City')
-    return [i[1].to_dict() for i in cities.items()
-            if i[1].state_id == state_id]
+    return jsonify([i[1].to_dict() for i in cities.items()
+                    if i[1].state_id == state_id])
 
 
 @cities_views.route("/cities/<city_id>",

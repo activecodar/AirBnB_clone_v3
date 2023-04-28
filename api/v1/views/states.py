@@ -3,7 +3,7 @@
 This module provides views for managing states.
 Handles all CRUD functions
 """
-from flask import request
+from flask import request, jsonify
 
 from api.v1.views import states_views
 from models import storage
@@ -19,7 +19,7 @@ def get_states():
         A list of state dictionaries.
     """
     states = storage.all('State')
-    return [i[1].to_dict() for i in states.items()]
+    return jsonify([i[1].to_dict() for i in states.items()])
 
 
 @states_views.route("/states/<state_id>",
