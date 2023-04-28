@@ -24,9 +24,7 @@ def get_state_cities(state_id):
     state = storage.get(State, state_id)
     if not state:
         return {"error": "Not found"}, 404
-    cities = storage.all('City')
-    return jsonify([i[1].to_dict() for i in cities.items()
-                    if i[1].state_id == state_id])
+    return jsonify([s.to_dict() for s in state.cities])
 
 
 @cities_views.route("/cities/<city_id>",
@@ -98,7 +96,8 @@ def create_city(state_id):
         return {"error": "Not found"}, 404
     if "name" not in data.keys():
         return {"error": "Missing name"}, 400
-    city = City(state_id=state_id, **data)
+    data["state_id"] = state_id
+    city = City(**data)
     storage.new(city)
     storage.save()
     return city.to_dict(), 201
@@ -129,7 +128,9 @@ def update_city(city_id):
         city = storage.get(City, city_id)
         if not city_id:
             return {"error": "Not found"}, 404
-        name = data.get("name", city.name) or city.name
-        city.name = name if name.strip() != "" else city.name
+        ignored_keys = ["id", "created_at", "updated_at", "state_id"]
+        for key, value in data.items():
+            if key not in ignored_keys:
+                setattr(city, key, value)
         storage.save()
         return city.to_dict(), 200
