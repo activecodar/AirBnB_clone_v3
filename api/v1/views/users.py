@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 """users creates a view for user objects
 """
-from flask import jsonify, abort, request
+from flask import jsonify, abort, request, escape
 from models import storage
 from models.user import User
 from api.v1.views import users_views
