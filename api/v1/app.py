@@ -7,13 +7,14 @@ import os
 
 from flask import Flask
 from models import storage
-from api.v1.views import app_views, states_views, cities_views
+from api.v1.views import app_views, states_views, cities_views, amenities_views
 
 app = Flask(__name__)
 
 app.register_blueprint(app_views)
 app.register_blueprint(states_views)
 app.register_blueprint(cities_views)
+app.register_blueprint(amenities_views)
 
 
 @app.teardown_appcontext
