@@ -21,10 +21,11 @@ def all_users():
                    strict_slashes=False)
 def get_user(user_id):
     """retrieves user with id user_id"""
-    user = storage.get(User, user_id)
-    if user is None:
-        abort(404)
-    return jsonify(user.to_dict())
+    users = storage.all(User)
+    for user in users.values():
+        if user.id == escape(user_id):
+            return jsonify(user.to_dict())
+    abort(404)
 
 
 @users_views.route('/users/<user_id>',
@@ -37,7 +38,7 @@ def delete(user_id):
         abort(404)
     storage.delete(user)
     storage.save()
-    return jsonify({}), 200
+    return {}, 200
 
 
 @users_views.route('/users',
@@ -55,7 +56,7 @@ def create():
     user = User(**data)
     storage.new(user)
     storage.save()
-    return jsonify(user.to_dict()), 201
+    return user.to_dict(), 201
 
 
 @users_views.route('/users/<user_id>',
