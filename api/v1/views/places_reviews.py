@@ -57,13 +57,13 @@ def create_review(place_id):
     if place is None:
         abort(404)
     if 'user_id' not in data.keys():
-        return "Missing user_id", 400
+        return {"error": "Missing user_id"}, 400
     user_id = data.get('user_id')
     user = storage.get(User, user_id)
     if user is None:
         abort(404)
     if 'text' not in data.keys():
-        return "Missing text", 400
+        return {"error": "Missing text"}, 400
     data['place_id'] = place_id
     review = Review(**data)
     storage.new(review)
@@ -77,16 +77,14 @@ def create_review(place_id):
 def update_review(review_id):
     """updates a review object"""
     review = storege.get(Review, review_id)
-    new_dict = {}
     if review is None:
         abort(404)
     data = request.get_json()
     if not data:
         return {"error": "Not a JSON"}, 400
+    ignore = ['id', 'user_id', 'place_id', 'created_at', 'updated_at']
     for key, value in data.items():
-        if key not in ['id', 'user_id', 'place_id', 'created_at', 'updated_at']:
-            new_dict[key] = value
-    for key, value in new_dict.items():
-        setattr(review, key, value)
+        if key not in ignore:
+            setattr(review, key, value)
     storage.save()
     return jsonify(review.to_dict()), 200
