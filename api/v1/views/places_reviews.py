@@ -77,6 +77,7 @@ def create_review(place_id):
 def update_review(review_id):
     """updates a review object"""
     review = storege.get(Review, review_id)
+    new_dict = {}
     if review is None:
         abort(404)
     data = request.get_json()
@@ -84,5 +85,8 @@ def update_review(review_id):
         return {"error": "Not a JSON"}, 400
     for key, value in data.items():
         if key not in ['id', 'user_id', 'place_id', 'created_at', 'updated_at']:
-            setattr(review, key, value)
+            new_dict[key] = value
+    for key, value in new_dict.items():
+        setattr(review, key, value)
+    storage.save()
     return jsonify(review.to_dict()), 200
