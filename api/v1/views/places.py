@@ -20,7 +20,7 @@ def get_all_places(city_id):
     return jsonify([item.to_dict() for item in city.places])
 
 
-@places_views.route('/places/place_id',
+@places_views.route('/places/<place_id>',
                     methods=["GET"],
                     strict_slashes=False)
 def get_place(place_id):
