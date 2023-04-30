@@ -1,4 +1,4 @@
-#!/usr/python3
+#!/usr/bin/python3
 """places_reviews defines a view for place
 reviews for the rest api
 """
