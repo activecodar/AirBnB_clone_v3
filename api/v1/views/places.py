@@ -14,7 +14,7 @@ from models.user import User
                     strict_slashes=False)
 def get_all_places(city_id):
     """retrieves all place objects of a city"""
-    city = storage.get(City, city_id)
+    city = storage.get(City, escape(city_id))
     if city is None:
         abort(404)
     return jsonify([item.to_dict() for item in city.places])
