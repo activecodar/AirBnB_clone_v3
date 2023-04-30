@@ -29,7 +29,7 @@ def get_user(user_id):
 
 
 @users_views.route('/users/<user_id>',
-                   methods=['GET'],
+                   methods=['DELETE'],
                    strict_slashes=False)
 def delete(user_id):
     """deletes a user"""
