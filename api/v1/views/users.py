@@ -72,7 +72,7 @@ def update(user_id):
     if not data:
         return {"error": "Not a JSON"}, 400
     for key, value in data.items():
-        if key not in ['id', 'created_at', 'updated_at']:
+        if key not in ['id', 'created_at', 'updated_at', 'email']:
             new_dict[key] = value
     for key, value in new_dict.items():
         setattr(user, key, value)

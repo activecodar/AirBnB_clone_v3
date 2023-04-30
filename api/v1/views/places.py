@@ -58,7 +58,8 @@ def create(city_id):
     if 'user_id' not in data.keys():
         return {"error": "Missing user_id"}, 400
     user_id = data.get('user_id')
-    if storage.get(User, user_id) is None:
+    user = storage.get(User, user_id)
+    if user is None:
         abort(404)
     if 'name' not in data.keys():
         return {"error": "Missing name"}, 400
