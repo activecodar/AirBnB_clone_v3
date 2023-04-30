@@ -28,7 +28,7 @@ def get_place(place_id):
     place = storage.get(Place, place_id)
     if place is None:
         abort(404)
-    return place.to_dict(), 200
+    return jsonify(place.to_dict())
 
 
 @places_views.route('/places/<place_id>',
@@ -62,7 +62,7 @@ def create(city_id):
     if user is None:
         abort(404)
     if 'name' not in data.keys():
-        return {"error": "Missing name"}, 400
+        return "Missing name", 400
     data['city_id'] = city_id
     place = Place(**data)
     storage.new(place)
