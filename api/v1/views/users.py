@@ -24,7 +24,7 @@ def get_user(user_id):
     users = storage.all(User)
     for user in users.values():
         if user.id == escape(user_id):
-            return jsonify(user.to_dict())
+            return jsonify(user.to_dict()), 200
     abort(404)
 
 
