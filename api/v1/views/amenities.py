@@ -76,6 +76,7 @@ def update(amenity_id):
     for key, value in data.items():
         if key not in ['id', 'created_at', 'updated_at']:
             new_dict[key] = value
-    amenity.__dict__.update(new_dict)
+    for key, value in new_dict.items():
+        setattr(amenity, key, value)
     storage.save()
     return amenity.to_dict(), 200

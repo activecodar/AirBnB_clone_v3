@@ -74,6 +74,7 @@ def update(user_id):
     for key, value in data.items():
         if key not in ['id', 'created_at', 'updated_at']:
             new_dict[key] = value
-    user.__dict__.update(new_dict)
+    for key, value in new_dict.items():
+        setattr(user, key, value)
     storage.save()
     return jsonify(user.to_dict()), 200

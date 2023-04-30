@@ -78,12 +78,13 @@ def update_place(place_id):
     new_dict = {}
     if place is None:
         abort(404)
-    data = request.get_json()
+    data = request.get_json(force=True, silent=True)
     if not data:
         return {"error": "Not a JSON"}, 400
     for key, value in data.items():
         if key not in ['id', 'user_id', 'city_id', 'created_at', 'updated_at']:
             new_dict[key] = value
-    place.__dict__.update(new_dict)
+    for key, value in new_dict.items():
+        setattr(place, key, value)
     storage.save()
     return place.to_dict(), 200
