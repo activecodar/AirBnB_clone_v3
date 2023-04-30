@@ -77,4 +77,4 @@ def update(user_id):
     for key, value in new_dict.items():
         setattr(user, key, value)
     storage.save()
-    return jsonify(user.to_dict()), 200
+    return user.to_dict(), 200
