@@ -14,7 +14,7 @@ from models.user import User
                     strict_slashes=False)
 def get_all_places(city_id):
     """retrieves all place objects of a city"""
-    city = storage.get(City, escape(city_id))
+    city = storage.get(City, city_id)
     if city is None:
         abort(404)
     return jsonify([item.to_dict() for item in city.places])
@@ -46,7 +46,7 @@ def delete(place_id):
 
 @places_views.route('/cities/<city_id>/places',
                     methods=["POST"],
-                    strict_slashes=True)
+                    strict_slashes=False)
 def create(city_id):
     """creates a place object"""
     data = request.get_json(force=True, silent=True)
@@ -62,17 +62,17 @@ def create(city_id):
     if user is None:
         abort(404)
     if 'name' not in data.keys():
-        return "Missing name", 400
+        return {"error": "Missing name"}, 400
     data['city_id'] = city_id
     place = Place(**data)
     storage.new(place)
     storage.save()
-    return place.to_dict(), 201
+    return jsonify(place.to_dict()), 201
 
 
 @places_views.route('/places/<place_id>',
                     methods=["PUT"],
-                    strict_slashes=True)
+                    strict_slashes=False)
 def update_place(place_id):
     """updates a place object"""
     place = storage.get(Place, place_id)
@@ -88,4 +88,4 @@ def update_place(place_id):
     for key, value in new_dict.items():
         setattr(place, key, value)
     storage.save()
-    return place.to_dict(), 200
+    return jsonify(place.to_dict()), 200
