@@ -42,7 +42,7 @@ def delete_review(review_id):
         abort(404)
     storage.delete(review)
     storage.save()
-    return jsonify{}, 200
+    return {}, 200
 
 
 @reviews_views.route('/places/<place_id>/reviews',
