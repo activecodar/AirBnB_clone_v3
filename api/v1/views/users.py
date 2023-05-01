@@ -52,11 +52,11 @@ def create():
     if "email" not in data.keys():
         return {"error": "Missing email"}, 400
     if "password" not in data.keys():
-        return {"error": "Missing password"}
+        return {"error": "Missing password"}, 400
     user = User(**data)
     storage.new(user)
     storage.save()
-    return user.to_dict(), 201
+    return jsonify(user.to_dict()), 201
 
 
 @users_views.route('/users/<user_id>',
