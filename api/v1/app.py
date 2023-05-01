@@ -5,7 +5,7 @@ application/entrypoint for the API v1.
 """
 import os
 
-from flask import Flask
+from flask import Flask, jsonify
 from models import storage
 from api.v1.views import app_views, states_views, cities_views, reviews_views
 from api.v1.views import amenities_views, users_views, places_views
@@ -42,7 +42,7 @@ def not_found(error):
     Args:
         error (Exception): The exception thrown in process
     """
-    return {"error": "Not found"}, 404
+    return jsonify({"error": "Not found"}), 404
 
 
 if __name__ == "__main__":
