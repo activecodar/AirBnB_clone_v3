@@ -12,7 +12,7 @@ from api.v1.views import reviews_views
 
 @reviews_views.route('/places/<place_id>/reviews',
                      methods=['GET'],
-                     strict_slashes=True)
+                     strict_slashes=False)
 def get_place_reviews(place_id):
     """retrieves reviews of a place"""
     place = storage.get(Place, place_id)
@@ -42,7 +42,7 @@ def delete_review(review_id):
         abort(404)
     storage.delete(review)
     storage.save()
-    return {}, 200
+    return jsonify{}, 200
 
 
 @reviews_views.route('/places/<place_id>/reviews',
