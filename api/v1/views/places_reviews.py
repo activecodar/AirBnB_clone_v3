@@ -76,7 +76,7 @@ def create_review(place_id):
                      strict_slashes=False)
 def update_review(review_id):
     """updates a review object"""
-    review = storege.get(Review, review_id)
+    review = storage.get(Review, review_id)
     if review is None:
         abort(404)
     data = request.get_json()
