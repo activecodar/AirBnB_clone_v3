@@ -126,7 +126,7 @@ def update_city(city_id):
         return {"error": "Not a JSON"}, 400
     else:
         city = storage.get(City, city_id)
-        if not city_id:
+        if not city:
             return {"error": "Not found"}, 404
         ignored_keys = ["id", "created_at", "updated_at", "state_id"]
         for key, value in data.items():
